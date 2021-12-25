@@ -1,7 +1,10 @@
-import { Body, Controller, Delete, Get, Post, Put, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Query, Req, Res, UseInterceptors } from '@nestjs/common';
+import { UndefinedToNullInterCeptor } from 'src/common/interceptors/undefinedToNulI.interceptor';
+import { User } from 'src/common/user.decorator';
 import { JoinRequestDto } from './dto/join.request.dto';
 import { UsersService } from './users.service';
 
+@UseInterceptors(UndefinedToNullInterCeptor)
 @Controller('/api/users')
 export class UsersController {
   constructor(private userService: UsersService) {}
@@ -16,8 +19,8 @@ export class UsersController {
   }
 
   @Post('login')
-  login(@Req() req) {
-    return req.user;
+  login(@User() user) {
+    return user.user;
   }
 
   @Post('logout')
