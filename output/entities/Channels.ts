@@ -2,10 +2,14 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { ChanelMembers } from "./ChanelMembers";
+import { ChannelChats } from "./ChannelChats";
+import { Workspaces } from "./Workspaces";
 
 @Index("channels_UN", ["workspaceId"], { unique: true })
 @Entity("channels", { schema: "sleact" })
@@ -30,4 +34,14 @@ export class Channels {
 
   @OneToMany(() => ChanelMembers, (chanelMembers) => chanelMembers.channel)
   chanelMembers: ChanelMembers[];
+
+  @OneToMany(() => ChannelChats, (channelChats) => channelChats.channel)
+  channelChats: ChannelChats[];
+
+  @OneToOne(() => Workspaces, (workspaces) => workspaces.channels, {
+    onDelete: "NO ACTION",
+    onUpdate: "NO ACTION",
+  })
+  @JoinColumn([{ name: "workspace_id", referencedColumnName: "id" }])
+  workspace: Workspaces;
 }
